@@ -22,6 +22,7 @@ SPLIT_TRANSPORT = custom
     OPT_DEFS += -DPIMORONI_TRACKBALL_ENABLE
     POINTING_DEVICE_ENABLE := yes
 	QUANTUM_LIB_SRC += transport.c serial.c i2c_master.c i2c_slave.c
+
 # QUANTUM_LIB_SRC += transport.c
 
 # QUANTUM_LIB_SRC += $(QUANTUM_DIR)/split_common/transport.c

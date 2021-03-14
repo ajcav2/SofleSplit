@@ -13,7 +13,10 @@ for more options.
 /* encoder support */
 #define TAP_CODE_DELAY 100
 
-#define NO_ACTION_TAPPING
+// #define NO_ACTION_TAPPING
+// #define TAPPING_TERM_PER_KEY
+#undef TAPPING_TERM
+#define TAPPING_TERM 175
 
 
 #ifndef NO_DEBUG
