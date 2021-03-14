@@ -6,7 +6,6 @@
 #ifdef OLED_DRIVER_ENABLE
 #include <stdio.h>
 
-char wpm_str[4];
 #endif
 
 #define KC_CAD	LALT(LCTL(KC_DEL))
@@ -34,7 +33,7 @@ enum custom_keycodes {
     KC_DLINE,
     KC_MOUSE,
     KC_MOUSE_BTN1,
-    KC_MOUSE_BTN2
+    KC_MOUSE_BTN2,
 };
 
 uint8_t MOUSE_BUTTONS;
@@ -82,7 +81,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_LOWER] = LAYOUT( \
   _______,   KC_F1,  KC_F2,   KC_F3,    KC_F4,  KC_F5,                         KC_F6, KC_F7, KC_F8, KC_F9,  KC_F10,   KC_DEL, \
   _______, KC_HOME, KC_UP, KC_END,   _______, _______,                         KC_7,  KC_8,  KC_9, _______, KC_EQUAL, KC_INS, \
-  KC_MOUSE, KC_LEFT, KC_DOWN, KC_RIGHT, _______, _______,                       KC_4,  KC_5,  KC_6, _______, _______,  _______, \
+  KC_CAPS, KC_LEFT, KC_DOWN, KC_RIGHT, _______, _______,                       KC_4,  KC_5,  KC_6, _______, _______,  _______, \
   KC_HOME, _______,  _______, _______,  KC_PASTE, _______,   KC_RBRC, XXXXXXX,  KC_1,  KC_2,  KC_3, _______, _______,  KC_END, \
                     _______, _______, _______, _______,   _______,  KC_0  ,  KC_F5, KC_F10, KC_F11, _______ \
 ),
@@ -165,23 +164,25 @@ void pointing_device_task() {
         process_mouse(&mouse_report);
     }
 
-
     switch (get_highest_layer(layer_state)) {
         case _COLEMAK:
         case _QWERTY:
-            trackball_set_timed_rgbw(0,0,0,80);
+            // trackball_set_timed_rgbw(0,0,0,80);
+            trackball_set_timed_rgbw(160,0, 0 ,0);
             break;
         case _RAISE:
             trackball_set_rgbw(0,153,95,0);
             break;
         case _LOWER:
-             trackball_set_rgbw(153,113,0,0);
+            //  trackball_set_rgbw(153,113,0,0);
+            trackball_set_rgbw(0,153,95,0);
             break;
         case _ADJUST:
             trackball_set_rgbw(153,0,110,0);
             break;
         case _MOUSE:
-            trackball_set_rgbw(0,73,153,0);
+            // trackball_set_rgbw(0,73,153,0);
+            trackball_set_rgbw(153,0,110,0);
             break;
         default:
             trackball_set_timed_rgbw(0,0,0,80);
@@ -337,7 +338,7 @@ static void print_status_narrow(void) {
             oled_write_P(PSTR("Adj\n"), false);
             break;
         case _MOUSE:
-            oled_write_P(PSTR("Mouse\n"), false);
+            oled_write_P(PSTR("Mouse"), false);
             break;
         default:
             oled_write_ln_P(PSTR("Undef"), false);
@@ -346,13 +347,8 @@ static void print_status_narrow(void) {
     led_t led_usb_state = host_keyboard_led_state();
     oled_write_ln_P(PSTR("CPSLK"), led_usb_state.caps_lock);
     oled_write_P(PSTR("\n"), false);
-    oled_write_ln_P(PSTR("WPM\n\nOn"), false);
+    // oled_write_ln_P(PSTR("Sofle\nv1.1"), true);
     
-
-
-    // oled_set_cursor(0,12);
-    // sprintf(wpm_str, "WPM\n%03d", get_current_wpm());
-    // oled_write_ln(wpm_str, false);
 }
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
@@ -495,12 +491,8 @@ uint8_t current_tap_frame = 0;
 void oled_task_user(void) {
     if (is_keyboard_master()) {
         print_status_narrow();
-        // oled_set_cursor(0,12);
-        // sprintf(wpm_str, "WPM\n%03d", get_current_wpm());
-        // oled_write(wpm_str, false);
     } else {
         render_wpm_graph();
-
         // render_anim();
         // oled_set_cursor(0,12);
         // sprintf(wpm_str, "WPM\n%03d", get_current_wpm());
